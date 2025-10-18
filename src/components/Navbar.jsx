@@ -16,7 +16,7 @@ export default function Navbar() {
   return (
     <nav className="h-14 px-4 flex items-center justify-between bg-neutral-900/90 text-white">
       <Link to="/" className="font-semibold">
-        MyWeb
+        Mini Project
       </Link>
       <div className="flex items-center gap-2">
         <NavLink to="/users" className={pill}>

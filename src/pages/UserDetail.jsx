@@ -6,26 +6,29 @@ export default function UserDetail() {
   const { id } = useParams();
   const [u, setU] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
 
   useEffect(() => {
     let ignore = false;
+    setErr("");
+    setLoading(true);
     UsersAPI.single(id)
       .then(({ data }) => {
-        if (ignore) return;
-        setU(data.data);
-        setLoading(false);
+        if (!ignore) setU(data.data);
       })
-      .catch(() => setLoading(false));
+      .catch((e) => setErr(e?.message || "Failed to fetch detail"))
+      .finally(() => !ignore && setLoading(false));
     return () => {
       ignore = true;
     };
   }, [id]);
 
-  if (loading) return <p>Loading...</p>;
-  if (!u) return <p>Not found</p>;
+  if (loading) return <div className="p-4">Loading...</div>;
+  if (err) return <div className="p-4 text-red-600">{err}</div>;
+  if (!u) return <div className="p-4">Not found</div>;
 
   return (
-    <div className="max-w-md">
+    <div className="p-4">
       <img
         src={u.avatar}
         alt={u.first_name}
@@ -35,7 +38,7 @@ export default function UserDetail() {
         {u.first_name} {u.last_name}
       </h2>
       <p className="text-gray-600">{u.email}</p>
-      <Link to="/" className="inline-block mt-4 underline">
+      <Link to="/users" className="inline-block mt-4 underline">
         ← Back
       </Link>
     </div>
