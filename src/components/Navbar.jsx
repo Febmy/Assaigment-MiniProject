@@ -5,12 +5,13 @@ import { useAuth } from "../context/auth";
 export default function Navbar() {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const pill =
+    "px-3 py-1.5 rounded-full bg-white/15 hover:bg-white/25 transition";
+
   const handleLogout = useCallback(() => {
     logout();
     navigate("/login");
   }, [logout, navigate]);
-  const pill =
-    "px-3 py-1.5 rounded-full bg-white/15 hover:bg-white/25 transition";
 
   return (
     <nav className="h-14 px-4 flex items-center justify-between bg-neutral-900/90 text-white">
@@ -18,7 +19,19 @@ export default function Navbar() {
         MyWeb
       </Link>
       <div className="flex items-center gap-2">
-        {!isAuthenticated ? (
+        <NavLink to="/users" className={pill}>
+          Users
+        </NavLink>
+        {isAuthenticated ? (
+          <>
+            <NavLink to="/dashboard" className={pill}>
+              Dashboard
+            </NavLink>
+            <button onClick={handleLogout} className={pill}>
+              Logout
+            </button>
+          </>
+        ) : (
           <>
             <NavLink to="/login" className={pill}>
               Login
@@ -27,10 +40,6 @@ export default function Navbar() {
               Register
             </NavLink>
           </>
-        ) : (
-          <button onClick={handleLogout} className={pill}>
-            Logout
-          </button>
         )}
       </div>
     </nav>
